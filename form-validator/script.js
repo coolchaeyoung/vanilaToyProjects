@@ -1,3 +1,5 @@
+const form = document.getElementById("form");
+
 const SUCCESS = "success";
 const ERROR = "error";
 
