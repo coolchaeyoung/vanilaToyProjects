@@ -1,21 +1,3 @@
-const form = document.getElementById("form");
-const usernameInput = document.getElementById("username");
-const emailInput = document.getElementById("email");
-const pswdInput = document.getElementById("password");
-const confirmPswdInput = document.getElementById("password2");
-const [
-  usernameForm,
-  emailForm,
-  pswdForm,
-  confirmPswdForm,
-] = document.querySelectorAll(".form-control");
-const [
-  usernameSmall,
-  emailSmall,
-  pswdSmall,
-  confirmPswdSmall,
-] = document.getElementsByTagName("small");
-
 const SUCCESS = "success";
 const ERROR = "error";
 
@@ -24,8 +6,16 @@ const classRemoveAdd = (element, removeClass, addClass) => {
   element.classList.add(addClass);
 };
 
+const getValues = (input) => {
+  const value = input.value;
+  const form = input.parentNode;
+  const small = input.parentNode.querySelector("small");
+  return [value, form, small];
+};
+
 const checkUsername = () => {
-  const username = usernameInput.value;
+  const usernameInput = document.getElementById("username");
+  const [username, usernameForm, usernameSmall] = getValues(usernameInput);
   if (username.length < 3) {
     classRemoveAdd(usernameForm, SUCCESS, ERROR);
     usernameSmall.innerText = "Username must be at least 3 characters";
@@ -36,7 +26,8 @@ const checkUsername = () => {
 
 const emailCheck = () => {
   const emailRegex = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
-  const email = emailInput.value;
+  const emailInput = document.getElementById("email");
+  const [email, emailForm, emailSmall] = getValues(emailInput);
   if (!emailRegex.test(email)) {
     classRemoveAdd(emailForm, SUCCESS, ERROR);
     emailSmall.innerText = "Email is not valid";
@@ -46,7 +37,8 @@ const emailCheck = () => {
 };
 
 const pswdCheck = () => {
-  const pswd = pswdInput.value;
+  const pswdInput = document.getElementById("password");
+  const [pswd, pswdForm, pswdSmall] = getValues(pswdInput);
   if (pswd.length < 6) {
     classRemoveAdd(pswdForm, SUCCESS, ERROR);
     pswdSmall.innerText = "Password must be at least 6 characters";
@@ -56,8 +48,11 @@ const pswdCheck = () => {
 };
 
 const confirmPswdCheck = () => {
-  const pswd = pswdInput.value;
-  const confirmPswd = confirmPswdInput.value;
+  const pswd = document.getElementById("password").value;
+  const confirmPswdInput = document.getElementById("password2");
+  const [confirmPswd, confirmPswdForm, confirmPswdSmall] = getValues(
+    confirmPswdInput
+  );
   if (!confirmPswd) {
     classRemoveAdd(confirmPswdForm, SUCCESS, ERROR);
     confirmPswdSmall.innerText = "Confirm Password is required";
