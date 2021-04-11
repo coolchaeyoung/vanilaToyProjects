@@ -28,7 +28,6 @@ const saveLocal = () => {
 };
 
 const handleClick = (e) => {
-  console.log(Array.from(seats).indexOf(e.target));
   if (e.target.className === "seat") {
     e.target.className = "seat selected";
     count.innerText = parseInt(count.innerText, 10) + 1;
