@@ -32,7 +32,7 @@ const renderRight = (keyChar) => {
   }
 };
 
-const renderWrong = (keyChar) => {
+const renderWrong = () => {
   figureParts[wrongCount++].style.display = "block";
   wrongWordContainer.innerHTML = `<p>Wrong</p><span>${wrongList.map(
     (wrong) => wrong
@@ -50,7 +50,7 @@ const handleKeyDown = (e) => {
       renderRight(keyChar);
     } else {
       wrongList.push(keyChar);
-      renderWrong(keyChar);
+      renderWrong();
     }
     keyDownList.push(keyChar);
   } else {
