@@ -44,7 +44,7 @@ const renderWrong = () => {
 };
 
 const handleKeyDown = (e) => {
-  const keyChar = String.fromCharCode(e.keyCode + 32);
+  const keyChar = String.fromCharCode(e.keyCode).toLocaleLowerCase();
   if (keyDownList.indexOf(keyChar) === -1) {
     if (randomWordArr.includes(keyChar)) {
       renderRight(keyChar);
