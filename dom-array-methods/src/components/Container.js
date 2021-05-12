@@ -1,6 +1,7 @@
 import Aside from "./Aside.js";
 import Main from "./Main.js";
 import Loading from "./Loading.js";
+import { request } from "../api/api.js";
 
 export default class Container {
   constructor({ $app }) {
@@ -82,9 +83,7 @@ export default class Container {
       isLoading: true,
     });
     try {
-      const { results } = await (
-        await fetch("https://randomuser.me/api/")
-      ).json();
+      const { results } = await request();
       const person = {
         name: `${results[0].name.first} ${results[0].name.last}`,
         wealth: parseInt(Math.random() * 999999 + 100000, 10),
