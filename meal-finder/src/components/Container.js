@@ -3,6 +3,9 @@ import Form from "./Form.js";
 import ResultHeading from "./ResultHeading.js";
 import MealsPresenter from "./MealsPresenter.js";
 import SingleMeal from "./SingleMeal.js";
+import Loading from "./Loading.js";
+
+const cache = {};
 
 export default class Container {
   constructor($app) {
@@ -10,6 +13,7 @@ export default class Container {
       meal: null,
       meals: [],
       searchWord: "",
+      isLoading: false,
     };
     this.$target = document.createElement("div");
     this.$target.className = "container";
@@ -19,22 +23,63 @@ export default class Container {
     this.form = new Form({
       $container: this.$target,
       onSubmit: async (searchWord) => {
-        const { meals } = await searchAPI(searchWord);
         this.setState({
           ...this.state,
-          searchWord,
-          meals,
+          isLoading: true,
         });
+        try {
+          if (cache[searchWord]) {
+            this.setState({
+              ...this.state,
+              searchWord,
+              meals: cache[searchWord],
+            });
+          } else {
+            const { meals } = await searchAPI(searchWord);
+            console.log(meals);
+            this.setState({
+              ...this.state,
+              searchWord,
+              meals,
+            });
+            cache[searchWord] = meals;
+          }
+        } catch (e) {
+          console.log(e);
+        } finally {
+          this.setState({
+            ...this.state,
+            isLoading: false,
+          });
+        }
       },
       onClick: async () => {
-        const { meals } = await randomAPI();
         this.setState({
           ...this.state,
-          meals: [],
-          meal: meals[0],
-          searchWord: "",
+          isLoading: true,
         });
+        try {
+          const { meals } = await randomAPI();
+          this.setState({
+            ...this.state,
+            meals: [],
+            meal: meals[0],
+            searchWord: "",
+          });
+        } catch (e) {
+          console.log(e);
+        } finally {
+          this.setState({
+            ...this.state,
+            isLoading: false,
+          });
+        }
       },
+    });
+
+    this.loading = new Loading({
+      $container: this.$target,
+      initialState: false,
     });
 
     this.resultHeading = new ResultHeading({
@@ -60,6 +105,7 @@ export default class Container {
   }
   setState(nextState) {
     this.state = nextState;
+    this.loading.setState(this.state.isLoading);
     this.resultHeading.setState(this.state.searchWord);
     this.mealsPresenter.setState(this.state.meals);
     this.singleMeal.setState(this.state.meal);
