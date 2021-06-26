@@ -1,7 +1,7 @@
 export default class Audio {
-  constructor({ $app, initialState, handleProgress, onClickProgress }) {
+  constructor({ $app, initialState, handleProgress, onClickNext }) {
     this.state = initialState;
-    this.onClickProgress = onClickProgress;
+    this.onClickNext = onClickNext;
     this.handleProgress = handleProgress;
     this.$target = document.createElement("audio");
     this.$target.src = `music/${this.state.music}.mp3`;
@@ -10,6 +10,7 @@ export default class Audio {
       const progresBar =
         (this.$target.currentTime / this.$target.duration) * 100;
       this.handleProgress(progresBar);
+      if (progresBar >= 100) this.onClickNext();
     });
     this.play();
   }

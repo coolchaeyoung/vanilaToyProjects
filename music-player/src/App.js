@@ -12,6 +12,17 @@ export default class App {
       play: false,
     };
     this.$target = $app;
+    this.onClick = () => {
+      this.$target.classList.add("play");
+      this.setState({
+        ...this.state,
+        currentIdx:
+          this.state.currentIdx + 1 >= titleList.length
+            ? 0
+            : this.state.currentIdx + 1,
+        play: true,
+      });
+    };
 
     this.musicInfo = new MusicInfo({
       $app,
@@ -30,6 +41,7 @@ export default class App {
       handleProgress: (width) => {
         this.musicInfo.progress(width);
       },
+      onClickNext: this.onClick,
     });
 
     this.imgContainer = new ImgContainer({
@@ -58,17 +70,7 @@ export default class App {
           play: !this.state.play,
         });
       },
-      onClickNext: () => {
-        this.$target.classList.add("play");
-        this.setState({
-          ...this.state,
-          currentIdx:
-            this.state.currentIdx + 1 >= titleList.length
-              ? 0
-              : this.state.currentIdx + 1,
-          play: true,
-        });
-      },
+      onClickNext: this.onClick,
     });
   }
   setState(nextState) {
